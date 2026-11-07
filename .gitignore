@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Entornos virtuales y secretos
+venv/
+.venv/
+.env
+
+# Datos crudos: se descargan solos (ver data/README.md)
+data/banking77/
+data/ag_news/
+data/*.csv
+data/*.parquet
+data/*.zip
+
+# Pesos de modelos entrenados (se regeneran con scripts/entrenar.py)
+models/*.pt
+models/*.pth
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
