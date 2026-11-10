@@ -1,6 +1,6 @@
 # Clasificación de noticias con NLP
 
-[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BaltaGalelli/ds3-proyecto-final/blob/main/notebooks/03_clasificador_tfidf.ipynb)
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BaltaGalelli/Pre-Entrega-3-/blob/main/notebooks/03_clasificador_tfidf.ipynb)
 
 ## Problema
 
@@ -29,35 +29,35 @@ F1 macro en validación (`min_df=2` en todos los casos):
 
 | `ngram_range` | `max_features` | Términos | Memoria (MB) | Naive Bayes | Regresión logística | **SVM lineal** |
 |---|---|---|---|---|---|---|
-| (1, 1) | 10.000 | 10.000 | 24,7 | 0,9006 | 0,9084 | 0,9071 |
-| (1, 1) | 30.000 | 30.000 | 26,3 | 0,9048 | 0,9110 | 0,9127 |
-| (1, 1) | sin límite | 35.268 | 26,4 | 0,9044 | 0,9109 | 0,9122 |
-| (1, 2) | 10.000 | 10.000 | 27,3 | 0,8981 | 0,9076 | 0,9051 |
-| (1, 2) | 30.000 | 30.000 | 32,1 | 0,9048 | 0,9123 | 0,9129 |
-| (1, 2) | 100.000 | 100.000 | 37,5 | 0,9094 | 0,9152 | 0,9156 |
-| **(1, 2)** | **sin límite** | **347.597** | **44,8** | 0,9107 | 0,9151 | **0,9212** |
+| (1, 1) | 10.000 | 10.000 | 24,7 | 0,9006 | 0,9091 | 0,9070 |
+| (1, 1) | 30.000 | 30.000 | 26,3 | 0,9048 | 0,9111 | 0,9126 |
+| (1, 1) | sin límite | 35.267 | 26,4 | 0,9043 | 0,9110 | 0,9118 |
+| (1, 2) | 10.000 | 10.000 | 27,3 | 0,8983 | 0,9076 | 0,9055 |
+| (1, 2) | 30.000 | 30.000 | 32,1 | 0,9048 | 0,9126 | 0,9133 |
+| (1, 2) | 100.000 | 100.000 | 37,5 | 0,9095 | 0,9156 | 0,9160 |
+| **(1, 2)** | **sin límite** | **347.631** | **44,8** | 0,9106 | 0,9150 | **0,9210** |
 
 ![F1 macro por configuración y modelo](reports/figures/pe3_experimentos.png)
 
-Regularización del SVM lineal con la mejor configuración: `C` = 0,1 → 0,9155 · 0,3 → 0,9198 · **1 → 0,9212** · 3 → 0,9159. Se queda el valor por defecto, `C=1`.
+Regularización del SVM lineal con la mejor configuración: `C` = 0,1 → 0,9154 · 0,3 → 0,9201 · **1 → 0,9210** · 3 → 0,9157. Se queda el valor por defecto, `C=1`.
 
 ### Por qué SVM lineal
 
-- **Es el mejor en validación:** 0,9212 de F1 macro, contra 0,9152 de la Regresión Logística y 0,9107 de Naive Bayes en sus mejores configuraciones. Gana en 5 de las 7 configuraciones del vectorizador.
-- **Escala bien a muchos términos:** Con 347.597 términos y 106.549 noticias entrena en ~3 segundos. La Regresión Logística tarda ~17 segundos con la misma matriz y queda 0,6 puntos abajo.
+- **Es el mejor en validación:** 0,9210 de F1 macro, contra 0,9156 de la Regresión Logística y 0,9106 de Naive Bayes en sus mejores configuraciones. Gana en 5 de las 7 configuraciones del vectorizador.
+- **Escala bien a muchos términos:** Con 347.631 términos y 106.549 noticias entrena en ~3 segundos. La Regresión Logística tarda ~29 segundos con la misma matriz y queda 0,6 puntos abajo.
 - **Busca el margen máximo entre clases**, Lo que lo hace robusto cuando hay muchos más términos que los que aparecen en cada documento (el caso típico de texto).
 - **Por qué no Naive Bayes:** Es el más rápido (menos de medio segundo), pero queda último en todas las configuraciones. Su supuesto de independencia entre palabras pesa más cuando se agregan bigramas, que están correlacionados con sus unigramas.
-- **Lo que se resigna:** `LinearSVC` no da probabilidades. Si en el próximo módulo hacen falta (por ejemplo, para derivar solo las noticias con alta confianza), se pueden obtener con `CalibratedClassifierCV` o usar la Regresión Logística, que queda a 0,6 puntos.
+- **Lo que se resigna:** `LinearSVC` no da probabilidades. Si en el próximo módulo hacen falta (por ejemplo, para derivar solo las noticias con alta confianza), se pueden obtener con `CalibratedClassifierCV` o usar la Regresión Logística, que queda a 0,5 puntos.
 
 ### Parámetros del Vectorizador
 
 | Parámetro | Valor | Por qué |
 |---|---|---|
 | `ngram_range` | `(1, 2)` | Captura expresiones de dos palabras con significado propio: *prime minister*, *red sox*, *oil price*, *open source*. Solo suma si se deja un vocabulario grande (ver tabla). |
-| `max_features` | `None` | Limitar el vocabulario **no mejoró la generalización**: con 100.000 términos el F1 baja de 0,9212 a 0,9156, y con 10.000 a 0,9051. Los modelos lineales ya tienen regularización y `min_df` ya saca los términos únicos. Lo que sí da `max_features` es menos memoria (37,5 MB contra 44,8 MB con 100.000), y no hacía falta. |
+| `max_features` | `None` | Limitar el vocabulario **no mejoró la generalización**: con 100.000 términos el F1 baja de 0,9210 a 0,9160, y con 10.000 a 0,9055. Los modelos lineales ya tienen regularización y `min_df` ya saca los términos únicos. Lo que sí da `max_features` es menos memoria (37,5 MB contra 44,8 MB con 100.000), y no hacía falta. |
 | `min_df` | `2` | Saca los términos que aparecen en una sola noticia (errores de tipeo, nombres raros), que no generalizan. |
 | `token_pattern`, `lowercase` | `r"\S+"`, `False` | El texto ya llega tokenizado y en minúsculas desde spaCy. Así se respetan sus tokens; el patrón por defecto de scikit-learn descartaría los de un carácter y los números de una cifra. |
-| Stop-words | fuera, en el preprocesamiento | Con la lista de spaCy, conservando las negaciones: 347.597 términos en lugar de 382.252, y el F1 sube de 0,9180 a 0,9212. |
+| Stop-words | fuera, en el preprocesamiento | Con la lista de spaCy, conservando las negaciones: 347.631 términos en lugar de 382.217, y el F1 sube de 0,9176 a 0,9210. |
 | `norm`, `sublinear_tf` | `"l2"`, `False` | Los valores por defecto. Con L2, todos los documentos tienen vector de largo 1, sin importar el largo de la noticia. |
 
 ### Texto crudo vs Limpio
@@ -68,8 +68,8 @@ Misma configuración (SVM lineal, uni + bigramas), cambiando solo la entrada:
 |---|---|---|
 | Texto crudo (sin limpiar) | 415.564 | **0,9281** |
 | Solo limpieza regex (sin lematizar) | 407.843 | 0,9205 |
-| Lemas con stop-words | 382.252 | 0,9180 |
-| **Lemas sin stop-words (el elegido)** | **347.597** | 0,9212 |
+| Lemas con stop-words | 382.217 | 0,9176 |
+| **Lemas sin stop-words (el elegido)** | **347.631** | 0,9210 |
 
 **El texto crudo da el mejor número, pero por la razón equivocada.** La limpieza regex sola (sin lematizar) da casi lo mismo que los lemas, así que la ventaja no viene de "no lematizar", sino del ruido que la limpieza saca. Las **firmas de agencia delatan la categoría**:
 - en el test, "(Sports Network)" aparece solo en Sports (78 de 78 noticias);
@@ -80,17 +80,17 @@ Un modelo entrenado con eso aprende a reconocer **la agencia, no el tema**, y co
 
 ### Resultados en el Test
 
-SVM lineal, `C=1`, TF-IDF de unigramas y bigramas, entrenado con las 118.388 noticias de train (383.918 términos):
+SVM lineal, `C=1`, TF-IDF de unigramas y bigramas, entrenado con las 118.388 noticias de train (383.945 términos). El reporte completo está en [`reports/pe3_classification_report.txt`](reports/pe3_classification_report.txt):
 
 | Categoría | Precision | Recall | F1 | Noticias |
 |---|---|---|---|---|
 | World | 0,9338 | 0,9053 | 0,9193 | 1.900 |
 | Sports | 0,9581 | 0,9874 | **0,9725** | 1.900 |
-| Business | 0,8861 | 0,8847 | **0,8854** | 1.900 |
-| Sci_Tech | 0,8949 | 0,8963 | 0,8956 | 1.900 |
-| **Total** | | **Accuracy 0,9184** | **F1 macro 0,9182** | 7.600 |
+| Business | 0,8856 | 0,8842 | **0,8849** | 1.900 |
+| Sci_Tech | 0,8944 | 0,8958 | 0,8951 | 1.900 |
+| **Total** | | **Accuracy 0,9182** | **F1 macro 0,9180** | 7.600 |
 
-- **Sin sobreajuste a la validación:** F1 macro de 0,9212 en validación y 0,9182 en test, una diferencia de 0,3 puntos.
+- **Sin sobreajuste a la validación:** F1 macro de 0,9210 en validación y 0,9180 en test, una diferencia de 0,3 puntos.
 - **El resultado tiene sentido para el problema:** Con 4 clases balanceadas, adivinar al azar daría 25%. Los baselines publicados para AG News con bolsa de palabras rondan el 88-92% (Zhang et al., 2015), y los Transformers llegan a ~95%: este baseline está en el rango esperado y deja margen para el Módulo 4.
 
 ### Análisis preliminar: Qué categorías cuestan más?
@@ -99,13 +99,13 @@ SVM lineal, `C=1`, TF-IDF de unigramas y bigramas, entrenado con las 118.388 not
 
 | Real → Predicha | Errores | % de la categoría real |
 |---|---|---|
-| Business → Sci_Tech | 150 | 7,9% |
-| Sci_Tech → Business | 133 | 7,0% |
+| Business → Sci_Tech | 151 | 7,9% |
+| Sci_Tech → Business | 134 | 7,1% |
 | World → Business | 77 | 4,1% |
 | World → Sports | 58 | 3,1% |
 | Business → World | 58 | 3,1% |
 
-- **Business y Sci_Tech son las más difíciles** (F1 de 0,885 y 0,896), y se confunden **entre sí**: son las dos confusiones más grandes, con 283 errores entre las dos (el 45% de todos los errores). Mirando los errores, son noticias **de negocios de empresas tecnológicas**: Intel que demora un producto, Yahoo que baja precios o Amazon que compra un competidor están etiquetadas como Business, mientras que IBM contratando gente o la salida a bolsa de Google están como Sci_Tech. Comparten vocabulario (*company*, *profit*, *software*, *web*) y la frontera es ambigua aun para una persona.
+- **Business y Sci_Tech son las más difíciles** (F1 de 0,885 y 0,895), y se confunden **entre sí**: son las dos confusiones más grandes, con 285 errores entre las dos (el 46% de todos los errores). Mirando los errores, son noticias **de negocios de empresas tecnológicas**: Intel que demora un producto, Yahoo que baja precios o Amazon que compra un competidor están etiquetadas como Business, mientras que IBM contratando gente o la salida a bolsa de Google están como Sci_Tech. Comparten vocabulario (*company*, *profit*, *software*, *web*) y la frontera es ambigua aun para una persona.
 - **World pierde sobre todo contra Business** (4,1%: economía internacional, petróleo, sanciones) y **contra Sports** (3,1%): Las noticias de los Juegos Olímpicos de Atenas 2004 tienen contexto internacional.
 - **Sports es la más fácil** (recall 98,7%): su vocabulario (*coach*, *quarterback*, *nascar*, *season*) casi no aparece en otras categorías.
 - **Lo que mostraron los términos con más peso:**
@@ -142,7 +142,7 @@ El learning rate se eligió probando 0.0001, 0.001 y 0.01 ([comparación](report
 ## Estructura del repositorio
 
 ```
-ds3-proyecto-final/
+Pre-Entrega-3-/
 ├── data/                         # README con fuentes, licencias y hashes (los datos se descargan solos)
 ├── notebooks/
 │   ├── 01_pipeline_base.ipynb       # Pre-entrega 1: pipeline en PyTorch (Banking77)
@@ -157,7 +157,7 @@ ds3-proyecto-final/
 │   ├── clasificador_tfidf.py     # Pre-entrega 3 completa por línea de comandos
 │   └── entrenar.py               # Pre-entrega 1
 ├── tests/                        # 21 tests (pytest): preprocesamiento, fuga de datos, modelos
-├── reports/                      # métricas (JSON/CSV) y figuras de cada entrega
+├── reports/                      # métricas (JSON/CSV), classification_report (TXT) y figuras de cada entrega
 ├── requirements.txt
 └── README.md
 ```
@@ -169,8 +169,8 @@ ds3-proyecto-final/
 **Local:**
 
 ```bash
-git clone https://github.com/BaltaGalelli/ds3-proyecto-final.git
-cd ds3-proyecto-final
+git clone https://github.com/BaltaGalelli/Pre-Entrega-3-.git
+cd Pre-Entrega-3-
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
@@ -181,7 +181,7 @@ pytest                                    # tests
 
 Para usar los CSV de la cátedra, copiá `ag_news_train.csv` y `ag_news_test.csv` en `data/ag_news/`. 
 
-**Versiones:** Python 3.13, scikit-learn 1.9.1, spaCy 3.8.18 (`en_core_web_sm` 3.8.0), pandas 3.0.5, NumPy 2.5.3, matplotlib 3.11.2, PyTorch 2.15.0. El detalle está en [requirements.txt](requirements.txt).
+**Versiones:** [requirements.txt](requirements.txt) fija versiones que se instalan en Python 3.10, 3.11, 3.12 y 3.13. Los resultados de este README salen de una instalación desde cero con `pip install -r requirements.txt` en **Python 3.10**: scikit-learn 1.6.1, spaCy 3.8.7 (`en_core_web_sm` 3.8.0), pandas 2.2.3, NumPy 2.2.6, matplotlib 3.10.0 y PyTorch 2.6.0. Con esas versiones, los 21 tests pasan y el notebook corre de punta a punta sin errores. Para abrir el notebook en local hace falta además `pip install jupyterlab`.
 
 ## Decisiones de diseño
 
@@ -191,6 +191,6 @@ Para usar los CSV de la cátedra, copiá `ag_news_train.csv` y `ag_news_test.csv
   - La deduplicación toca solo el train.
   - Un test (`test_sin_fuga_el_vocabulario_sale_solo_del_train`) verifica que predecir no agregue palabras al vocabulario.
 - **Preprocesamiento reutilizado, no reescrito:** Las funciones de la Pre-entrega 2 están en `src/pipeline/preprocesamiento.py` y el resultado se guarda en caché.
-- **Matrices esparsas:** El TF-IDF nunca se convierte a denso. Con 347.597 términos, la matriz de entrenamiento ocupa 44,8 MB; en denso serían cientos de GB.
+- **Matrices esparsas:** El TF-IDF nunca se convierte a denso. Con 347.631 términos, la matriz de entrenamiento ocupa 44,8 MB; en denso serían cientos de GB.
 - **F1 macro como métrica de selección:** Las clases están balanceadas, así que da casi igual que la accuracy, pero pesa por igual a las 4 categorías y no esconde una clase mala.
 - **Datos verificados:** Las descargas están fijadas a un commit y se verifican con SHA-256.

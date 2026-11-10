@@ -1,0 +1,39 @@
+{
+  "entorno": {
+    "torch": "2.14.1+cu130",
+    "dispositivo": "cpu"
+  },
+  "config": {
+    "semilla": 42,
+    "tamano_validacion": 0.15,
+    "ngramas_max": 2,
+    "frecuencia_minima": 2,
+    "arquitectura": "mlp",
+    "capas_ocultas": [
+      256
+    ],
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "batch_size": 64,
+    "epocas": 30,
+    "paciencia": 5
+  },
+  "datos": {
+    "n_variables": 9232,
+    "n_clases": 77,
+    "n_train": 8502,
+    "n_val": 1501,
+    "n_test": 3080
+  },
+  "parametros": 2383437,
+  "entrenamiento": {
+    "mejor_epoca": 17,
+    "mejor_val_loss": 0.3796346828907351,
+    "epocas_corridas": 22
+  },
+  "test": {
+    "loss": 0.3477727355072638,
+    "accuracy": 0.8983766436576843,
+    "f1_macro": 0.898778559643551
+  }
+}

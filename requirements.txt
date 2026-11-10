@@ -1,13 +1,13 @@
-# Versiones exactas con las que se ejecutó y verificó el proyecto (Python 3.13).
-# En Google Colab no hace falta instalar nada: ya trae estas librerías (en versiones cercanas).
-numpy==2.5.3
-pandas==3.0.5
-pyarrow==26.0.0
-scikit-learn==1.9.1
-matplotlib==3.11.2
-spacy==3.8.18
+# Versiones fijadas y verificadas con una instalación desde cero (pip install -r requirements.txt)
+# en Python 3.10, 3.11, 3.12 y 3.13. En Google Colab no hace falta instalar nada.
+numpy==2.2.6
+pandas==2.2.3
+pyarrow==18.1.0
+scikit-learn==1.6.1
+matplotlib==3.10.0
+spacy==3.8.7
+typer==0.29.0          # CLI de spaCy
+click==8.1.8           # spaCy lo importa directamente y las versiones nuevas de typer ya no lo instalan
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
-torch==2.15.0          # Pre-entrega 1 (pipeline en PyTorch)
-# Para correr los notebooks y los tests en local
-jupyterlab
-pytest
+torch==2.6.0           # Pre-entrega 1 (pipeline en PyTorch)
+pytest==8.3.4
